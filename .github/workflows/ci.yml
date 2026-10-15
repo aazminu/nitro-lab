@@ -1,0 +1,22 @@
+name: nitro-lab CI
+
+on:
+  push:
+    branches: [main, "feat/**", "fix/**"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run unit tests
+        run: node --test tests/telemetryEngine.test.js
+      - name: Run CLI health & anomaly audit
+        run: |
+          node bin/nitro-lab-cli.js audit-fleet
+          node bin/nitro-lab-cli.js simulate-anomalies
