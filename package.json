@@ -1,16 +1,22 @@
 {
   "name": "nitro-lab",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
+  "type": "module",
+  "bin": {
+    "nitro-lab": "./bin/nitro-lab-cli.js"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test": "node --test tests/telemetryEngine.test.js",
+    "cli": "node bin/nitro-lab-cli.js"
   },
   "dependencies": {
-    "lucide-react": "^1.46.0",
-    "next": "16.3.5",
-    "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "lucide-react": "^1.16.0",
+    "next": "^16.2.3",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5"
   }
 }
