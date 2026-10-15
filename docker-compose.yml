@@ -1,0 +1,38 @@
+services:
+  web:
+    build: .
+    restart: unless-stopped
+    environment:
+      - DOCKER_PROXY_URL=http://docker-proxy:2375
+      # Uptime Kuma is published on host port 3002
+      - UPTIME_KUMA_URL=http://host.docker.internal:3002
+      - UPTIME_KUMA_SLUG=public
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      # read-only, only used to measure free space
+      - /data:/host/data:ro
+      - /mnt/storage:/host/storage:ro
+    networks:
+      - internal
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu, utility]
+
+  docker-proxy:
+    image: tecnativa/docker-socket-proxy:latest
+    restart: unless-stopped
+    environment:
+      - CONTAINERS=1   # allow reading /containers only
+      - POST=0         # no writes of any kind
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - internal
+
+networks:
+  internal:
